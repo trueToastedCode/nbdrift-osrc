@@ -1,0 +1,17 @@
+{
+  "name": "Segway Mobility Open Source Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "BUILD_TOOLS_VERSION": "36.0.0",
+      "APKTOOL_VERSION": "v2.11.1"
+    }
+  },
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "ms-azuretools.vscode-docker",  // Docker Extension
+  ],
+  "remoteUser": "vscode"
+}
