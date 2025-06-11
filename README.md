@@ -9,10 +9,11 @@ Compatible 6.9.1<br>
 ### nbdrift Injection Lib
 [Download here](https://drive.google.com/file/d/1c7P5YQv2bbzXvKQaadS49lG_w2wWM74S/view?usp=sharing](https://drive.google.com/drive/folders/1lKpRhx2mWYWAiIoIEPyJkhB75iPiTszy?usp=sharing))
 ## How to patch
-1. Open the project folder in [Visual Studio Code](https://code.visualstudio.com/)
-2. Ensure the [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) is installed
-3. Run `Dev Containers: Rebuild and Reopen in Container` from the command palette
-4. Copy the following files from your .xapk into the `assets/apks` folder:
+1. Ensure [Docker](https://www.docker.com/) is installed on your system.
+2. Open the project folder in [Visual Studio Code](https://code.visualstudio.com/)
+3. Ensure the [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) is installed
+4. Run `Dev Containers: Rebuild and Reopen in Container` from the command palette
+5. Copy the following files from your .xapk into the `assets/apks` folder:
    - com.ninebot.segway.apk
    - config.arm64_v8a.apk
    - config.en.apk
