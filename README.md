@@ -30,6 +30,10 @@ In your internal shared storage (commonly `/storage/emulated/0`), make a new fol
 
 Update checks are always spoofed and cannot be disabled.
 
+### Viewing the Logs / Dumping API Communication
+- Using logcat: `adb logcat -s "nbdrift"`
+- With cleaning: `clear && adb logcat -c && adb logcat -s "nbdrift"`
+
 ### Iot fw update response Spoofing
 Write a custom server payload into `fw-iot.json`. This is useful for injecting custom firmware into the Ninebot app or disabling forced updates.
 
