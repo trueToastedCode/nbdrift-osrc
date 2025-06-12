@@ -105,4 +105,4 @@ if __name__ == '__main__':
     logger.info(f"Firmware directory: {BASE_DIR / 'fw'}")
     
     # Run the server  
-    app.run(host='localhost', port=80, debug=False)
+    app.run(host='localhost', port=5000, debug=False)
