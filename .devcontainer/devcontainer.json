@@ -1,0 +1,16 @@
+{
+  "name": "Segway Mobility Fake Server Open Source Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {}
+  },
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "extensions": [
+    "ms-azuretools.vscode-docker",  // Docker Extension
+    "ms-python.python",
+    "ms-python.vscode-pylance"
+  ],
+  "remoteUser": "vscode"
+}
