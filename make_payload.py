@@ -92,7 +92,7 @@ def create_part_from_args(args):
     
     return {
         'part_type': args.part_type,
-        'version_code': args.version_code,
+        'version_code': int(args.version_code),
         'description': args.description,
         'cpu_id': args.cpu_id,
         'data': firmware_data,
