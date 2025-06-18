@@ -42,3 +42,7 @@ Example response for no available udpate:
 `{"code":1,"data":{"parts_version":[],"show_kart_tip":false,"special_version_status":false,"forced_status":false,"forced_content":"","sub_wnumber":"","source":1},"desc":"Successfully"}`
 ### Serial Spoofing
 Write a custom serial number into `sn-spoof.txt`. This is useful when the scooter has been patched to ignore limits imposed by its serial number. However, without this patch, it might still not show you the newly available options.
+## Links:
+- Injection lib: https://github.com/trueToastedCode/nbdrift
+- Fake server: https://github.com/trueToastedCode/nbdrift-osrc/tree/fake-server
+- Payload generator: https://github.com/trueToastedCode/nbdrift-osrc/tree/make-payload
