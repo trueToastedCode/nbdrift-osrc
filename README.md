@@ -31,6 +31,8 @@ In your internal shared storage (commonly `/storage/emulated/0`), make a new fol
 
 Update checks are always spoofed and cannot be disabled.
 
+Account permissions are also hooked to allow scooter connection without device binding, and this cannot be disabled. It is recommended, likely neccessary to unbind the device in their original app if you plan to flash anything.
+
 ### Viewing the Logs / Dumping API Communication
 - Using logcat: `adb logcat -s "nbdrift"`
 - With cleaning: `clear && adb logcat -c && adb logcat -s "nbdrift"`
