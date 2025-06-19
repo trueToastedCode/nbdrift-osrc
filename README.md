@@ -7,7 +7,7 @@ Use of this project may affect your device or app in ways not intended by the or
 Compatible 6.9.1<br>
 [Download here](https://apkpure.com/segway-ninebot/com.ninebot.segway/download/6.9.1)
 ### nbdrift Injection Lib
-[Download here](https://drive.google.com/file/d/1c7P5YQv2bbzXvKQaadS49lG_w2wWM74S/view?usp=sharing](https://drive.google.com/drive/folders/1lKpRhx2mWYWAiIoIEPyJkhB75iPiTszy?usp=sharing))
+[Download here]([https://drive.google.com/file/d/1c7P5YQv2bbzXvKQaadS49lG_w2wWM74S/view?usp=sharing](https://drive.google.com/drive/folders/1lKpRhx2mWYWAiIoIEPyJkhB75iPiTszy?usp=sharing](https://drive.google.com/drive/folders/1lKpRhx2mWYWAiIoIEPyJkhB75iPiTszy?usp=drive_link)))
 ## How to patch
 1. Ensure [Docker](https://www.docker.com/) is installed on your system.
 2. Open the project folder in [Visual Studio Code](https://code.visualstudio.com/)
