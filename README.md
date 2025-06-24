@@ -31,7 +31,11 @@ In your internal shared storage (commonly `/storage/emulated/0`), make a new fol
 
 Update checks are always spoofed and cannot be disabled.
 
-Account permissions are also hooked to allow scooter connection without device binding, and this cannot be disabled. It is recommended, likely neccessary to unbind the device in their original app if you plan to flash anything.
+### Firmware flashing
+It is recommended to unbind the device in the original app. Then connect with permission spoofing and a fw update response spoof. Server the fw using a [fake server](https://github.com/trueToastedCode/nbdrift-osrc/tree/fake-server).
+
+### Permission spoofing
+This allow scooter connection without device binding. Control it using a flag in `prm-spoof.txt`: `0` Disabled, `1` Enabled.
 
 ### Viewing the Logs / Dumping API Communication
 - Using logcat: `adb logcat -s "nbdrift"`
