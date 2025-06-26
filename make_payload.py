@@ -9,13 +9,17 @@ from pathlib import Path
 
 IOT_VCU_LIGHT_URL = "http://localhost:5000/images/bright/ic_fw_vcu.png"
 IOT_VCU_DARK_URL = "http://localhost:5000/images/dark/ic_fw_vcu.png"
-IOT_VCU_DOWN_URL = "http://localhost:5000/fw/zt3pro/vcu.bin.enc"
+IOT_VCU_DOWN_URL = "http://localhost:5000/fw/%s/vcu.bin.enc"
 
 class PartType(StrEnum):
     VCU = 'vcu'
 
 class UpdateEndpoint(StrEnum):
     IOT = 'iot'
+
+class Device(StrEnum):
+    ZT3PRO = 'zt3pro'
+    MAXG3 = 'g3'
 
 def get_md5(data):
     """Calculate MD5 hash of binary data."""
@@ -42,7 +46,7 @@ def read_firmware_file(filepath):
         print(f"Error reading firmware file: {e}", file=sys.stderr)
         sys.exit(1)
 
-def make_payload(update_endpoint, parts):
+def make_payload(update_endpoint, parts, device):
     """Generate payload for firmware update."""
     parts_payload = []
     if update_endpoint == UpdateEndpoint.IOT:
@@ -57,7 +61,7 @@ def make_payload(update_endpoint, parts):
                     "part_name": "Vehicle controller",
                     "light_url": IOT_VCU_LIGHT_URL,
                     "dark_url": IOT_VCU_DARK_URL,
-                    "blue_down_url": IOT_VCU_DOWN_URL,
+                    "blue_down_url": IOT_VCU_DOWN_URL % device.value,
                     "md5": get_md5(part['data']),
                     "verify_code": calc_nb_verify_code(part['data']),
                     "cpuid": part['cpu_id'],
@@ -141,17 +145,18 @@ def main():
         epilog="""
 Examples:
   # Generate payload from command line arguments
-  python firmware_cli.py --firmware vcu.bin --version-code "331" --cpu-id "ABC123" --description "Bug fixes"
+  python firmware_cli.py --firmware vcu.bin --version-code "331" --cpu-id "ABC123" --description "Bug fixes" --device zt3pro
   
   # Generate payload from config file
-  python firmware_cli.py --config config.json
+  python firmware_cli.py --config config.json --device g3
   
   # Save output to file
-  python firmware_cli.py --firmware vcu.bin --version-code "331" --cpu-id "ABC123" --output payload.json
+  python firmware_cli.py --firmware vcu.bin --version-code "331" --cpu-id "ABC123" --output payload.json --device zt3pro
   
 Config file format (JSON):
 {
   "endpoint": "iot",
+  "device": "zt3pro",
   "parts": [
     {
       "part_type": "vcu",
@@ -179,6 +184,10 @@ Config file format (JSON):
     parser.add_argument('--cpu-id', help='CPU ID')
     parser.add_argument('--random-code', help='Random code (auto-generated if not provided)')
     
+    # Device selection
+    parser.add_argument('--device', choices=[d.value for d in Device], 
+                       help='Target device type (required)')
+    
     # Common arguments
     parser.add_argument('--endpoint', '-e', choices=['iot'], default='iot',
                        help='Update endpoint (default: iot)')
@@ -197,12 +206,16 @@ Config file format (JSON):
             config = load_config_file(args.config)
             parts = config['parts']
             endpoint = UpdateEndpoint(config.get('endpoint', args.endpoint))
+            # Device can be specified in config or command line, command line takes precedence
+            device = args.device or config.get('device')
+            if not device:
+                parser.error("Device must be specified either in config file or via --device argument")
             if not args.quiet:
                 print(f"Loaded {len(parts)} part(s) from config file", file=sys.stderr)
         else:
             # Create from command line arguments
-            if not all([args.version_code, args.cpu_id]):
-                parser.error("When using --firmware, --version-code and --cpu-id are required")
+            if not all([args.version_code, args.cpu_id, args.device]):
+                parser.error("When using --firmware, --version-code, --cpu-id, and --device are required")
             
             if not args.description:
                 args.description = f"Firmware version code {args.version_code}"
@@ -210,11 +223,20 @@ Config file format (JSON):
             part = create_part_from_args(args)
             parts = [part]
             endpoint = UpdateEndpoint(args.endpoint)
+            device = args.device
+            if not args.quiet:
+                print(f"Generated part from firmware file: {args.firmware} for device '{device}'", file=sys.stderr)
             if not args.quiet:
                 print(f"Generated part from firmware file: {args.firmware}", file=sys.stderr)
         
+        # Validate device
+        try:
+            Device(device)
+        except ValueError:
+            parser.error(f"Invalid device: {device}. Must be one of: {[d.value for d in Device]}")
+
         # Generate payload
-        payload = make_payload(endpoint, parts)
+        payload = make_payload(endpoint, parts, device)
         
         # Format output
         if args.pretty:
