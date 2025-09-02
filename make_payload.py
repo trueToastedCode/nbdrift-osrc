@@ -9,10 +9,11 @@ from pathlib import Path
 
 IOT_VCU_LIGHT_URL = "http://localhost:5000/images/bright/ic_fw_vcu.png"
 IOT_VCU_DARK_URL = "http://localhost:5000/images/dark/ic_fw_vcu.png"
-IOT_VCU_DOWN_URL = "http://localhost:5000/fw/%s/vcu.bin.enc"
+IOT_VCU_DOWN_URL = "http://localhost:5000/fw/%s/%s.bin.enc"
 
 class PartType(StrEnum):
     VCU = 'vcu'
+    MCU = 'mcu'
 
 class UpdateEndpoint(StrEnum):
     IOT = 'iot'
@@ -20,6 +21,7 @@ class UpdateEndpoint(StrEnum):
 class Device(StrEnum):
     ZT3PRO = 'zt3pro'
     MAXG3 = 'g3'
+    GT3 = 'gt3'
 
 def get_md5(data):
     """Calculate MD5 hash of binary data."""
@@ -52,16 +54,31 @@ def make_payload(update_endpoint, parts, device):
     if update_endpoint == UpdateEndpoint.IOT:
         for part in parts:
             part_type = PartType(part['part_type'])
-            if part_type == PartType.VCU:
+            if part_type in [
+                PartType.VCU,
+                PartType.MCU
+            ]:
                 part_payload = {
-                    "part_type": "VCU",
+                    "part_type": {
+                        PartType.VCU: 'VCU',
+                        PartType.MCU: 'MCU'
+                    }[part_type],
                     "last_version": part['version_code'],
                     "version_content": f'{part["description"]}\n',
                     "pn": part['cpu_id'],
-                    "part_name": "Vehicle controller",
+                    "part_name": {
+                        PartType.VCU: 'Vehicle controller',
+                        PartType.MCU: 'Master controller'
+                    }[part_type],
                     "light_url": IOT_VCU_LIGHT_URL,
                     "dark_url": IOT_VCU_DARK_URL,
-                    "blue_down_url": IOT_VCU_DOWN_URL % device.value,
+                    "blue_down_url": IOT_VCU_DOWN_URL % (
+                        device.value,
+                        {
+                            PartType.VCU: 'vcu',
+                            PartType.MCU: 'mcu'
+                        }[part_type]
+                    ),
                     "md5": get_md5(part['data']),
                     "verify_code": calc_nb_verify_code(part['data']),
                     "cpuid": part['cpu_id'],
@@ -177,7 +194,7 @@ Config file format (JSON):
     group.add_argument('--firmware', '-f', help='Path to firmware file')
     
     # Arguments for direct mode
-    parser.add_argument('--part-type', '-t', choices=['vcu'], default='vcu',
+    parser.add_argument('--part-type', '-t', choices=['vcu', 'mcu'], default='vcu',
                        help='Part type (default: vcu)')
     parser.add_argument('--version-code', '-v', help='Firmware version code')
     parser.add_argument('--description', '-d', help='Version description')
@@ -231,7 +248,7 @@ Config file format (JSON):
         
         # Validate device
         try:
-            Device(device)
+            device = Device(device)
         except ValueError:
             parser.error(f"Invalid device: {device}. Must be one of: {[d.value for d in Device]}")
 
